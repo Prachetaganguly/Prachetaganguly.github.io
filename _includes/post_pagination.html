@@ -1,6 +1,40 @@
 {% include base_path %}
 
-{% if page.previous or page.next %}
+{% if page.collection == "portfolio" %}
+  {% assign ordered_projects = site.portfolio | sort: "project_order" %}
+  {% assign project_index = nil %}
+  {% for project in ordered_projects %}
+    {% if project.url == page.url %}
+      {% assign project_index = forloop.index0 %}
+    {% endif %}
+  {% endfor %}
+  {% assign project_count = ordered_projects | size %}
+  {% assign previous_project = nil %}
+  {% assign next_project = nil %}
+  {% if project_index > 0 %}
+    {% assign previous_index = project_index | minus: 1 %}
+    {% assign previous_project = ordered_projects[previous_index] %}
+  {% endif %}
+  {% assign last_project_index = project_count | minus: 1 %}
+  {% if project_index < last_project_index %}
+    {% assign next_index = project_index | plus: 1 %}
+    {% assign next_project = ordered_projects[next_index] %}
+  {% endif %}
+  {% if previous_project or next_project %}
+    <nav class="pagination">
+      {% if previous_project %}
+        <a href="{{ base_path }}{{ previous_project.url }}" class="pagination--pager" title="{{ previous_project.title | markdownify | strip_html }}">{{ site.data.ui-text[site.locale].pagination_previous | default: "Previous" }}</a>
+      {% else %}
+        <a href="#" class="pagination--pager disabled">{{ site.data.ui-text[site.locale].pagination_previous | default: "Previous" }}</a>
+      {% endif %}
+      {% if next_project %}
+        <a href="{{ base_path }}{{ next_project.url }}" class="pagination--pager" title="{{ next_project.title | markdownify | strip_html }}">{{ site.data.ui-text[site.locale].pagination_next | default: "Next" }}</a>
+      {% else %}
+        <a href="#" class="pagination--pager disabled">{{ site.data.ui-text[site.locale].pagination_next | default: "Next" }}</a>
+      {% endif %}
+    </nav>
+  {% endif %}
+{% elsif page.previous or page.next %}
   <nav class="pagination">
     {% if page.previous %}
       <a href="{{ base_path }}{{ page.previous.url }}" class="pagination--pager" title="{{ page.previous.title | markdownify | strip_html }}">{{ site.data.ui-text[site.locale].pagination_previous | default: "Previous" }}</a>

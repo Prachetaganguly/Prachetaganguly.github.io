@@ -1,14 +1,15 @@
 ---
 layout: archive
-title: "Portfolio"
+title: "Projects"
 permalink: /portfolio/
 author_profile: true
 ---
 
+Welcome to my projects portfolio. Below you will find detailed case studies of my research initiatives.
+
 {% include base_path %}
 
-
-{% for post in site.portfolio %}
-  {% include archive-single.html %}
+{% assign ordered_projects = site.portfolio | sort: "project_order" %}
+{% for post in ordered_projects %}
+  <p><a href="{{ base_path }}{{ post.url }}">{{ post.title }}</a></p>
 {% endfor %}
-
